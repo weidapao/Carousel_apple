@@ -39,48 +39,50 @@
   </div>
 </body>
 <script>
-  var $buttons=$('#buttons>span');
-  var $zong_image=$('#zong_image');
-  var n=1;
-  //1.实现点击切换图片
-  for (let i = 0; i < $buttons.length; i++) {
-    $($buttons[i]).on('click',function(x){
-      n=$(x.currentTarget).index();
-      var drift=-n*300;
-      $zong_image.css({
-        transform:'translate('+drift+'px)'
+  $(document).ready(function(){
+    var $buttons=$('#buttons>span');
+    var $zong_image=$('#zong_image');
+    var n=1;
+    //1.实现点击切换图片
+    for (let i = 0; i < $buttons.length; i++) {
+      $($buttons[i]).on('click',function(x){
+        n=$(x.currentTarget).index();
+        var drift=-n*300;
+        $zong_image.css({
+          transform:'translate('+drift+'px)'
+        })
+        $(x.currentTarget).addClass('red')
+        .siblings().removeClass('red');
       })
-      $(x.currentTarget).addClass('red')
-      .siblings().removeClass('red');
+    }
+
+    //2.定时器切换图片
+    var timer=setInterval(function(){
+      var imgNum=$buttons.length;
+      var index=n%imgNum;
+      $($buttons[index]).trigger('click');
+      
+      $($buttons[index]).addClass('red')
+        .siblings('.red').removeClass('red');
+      n++;
+    },1000);
+
+    //3.鼠标移入停止
+    $('img').on('mouseenter',function(){
+      clearInterval(timer);
     })
-  }
 
-  //2.定时器切换图片
-  var timer=setInterval(function(){
-    var imgNum=$buttons.length;
-    var index=n%imgNum;
-    $($buttons[index]).trigger('click');
-    
-    $($buttons[index]).addClass('red')
-      .siblings('.red').removeClass('red');
-    n++;
-  },1000);
-
-  //3.鼠标移入停止
-  $('img').on('mouseenter',function(){
-    clearInterval(timer);
-  })
-
-  //4.鼠标移出继续
-  $('img').on('mouseleave',function(){
-    timer=setInterval(function(){
-    var imgNum=$buttons.length;
-    var index=n%imgNum;
-    $($buttons[index]).trigger('click');
-    $($buttons[index]).addClass('red')
-      .siblings('.red').removeClass('red');
-    n++;
-  },1000);
-  })
+    //4.鼠标移出继续
+    $('img').on('mouseleave',function(){
+      timer=setInterval(function(){
+      var imgNum=$buttons.length;
+      var index=n%imgNum;
+      $($buttons[index]).trigger('click');
+      $($buttons[index]).addClass('red')
+        .siblings('.red').removeClass('red');
+      n++;
+    },1000);
+    })
+})
 </script>
 </html>
