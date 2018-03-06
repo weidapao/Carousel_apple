@@ -42,7 +42,7 @@
   $(document).ready(function(){
     var $buttons=$('#buttons>span');
     var $zong_image=$('#zong_image');
-    var n=1;
+    var n=0;
     //1.实现点击切换图片
     for (let i = 0; i < $buttons.length; i++) {
       $($buttons[i]).on('click',function(x){
@@ -51,21 +51,16 @@
         $zong_image.css({
           transform:'translate('+drift+'px)'
         })
-        $(x.currentTarget).addClass('red')
-        .siblings().removeClass('red');
+        activeButton($(x.currentTarget));
       })
     }
 
+    //初始状态设置
+    var imgNum=$buttons.length;
+    $buttons.eq(n%imgNum).trigger('click');
+
     //2.定时器切换图片
-    var timer=setInterval(function(){
-      var imgNum=$buttons.length;
-      var index=n%imgNum;
-      $($buttons[index]).trigger('click');
-      
-      $($buttons[index]).addClass('red')
-        .siblings('.red').removeClass('red');
-      n++;
-    },1000);
+    var timer=clockT();
 
     //3.鼠标移入停止
     $('img').on('mouseenter',function(){
@@ -74,15 +69,23 @@
 
     //4.鼠标移出继续
     $('img').on('mouseleave',function(){
-      timer=setInterval(function(){
-      var imgNum=$buttons.length;
-      var index=n%imgNum;
-      $($buttons[index]).trigger('click');
-      $($buttons[index]).addClass('red')
-        .siblings('.red').removeClass('red');
-      n++;
-    },1000);
+      timer=clockT();
     })
+
+    //高亮图片按钮
+    function activeButton(aimButton){
+      aimButton.addClass('red')
+        .siblings('.red').removeClass('red');
+    }
+
+    //设定定时器
+    function clockT(){
+      return setInterval(()=>{
+        n++;
+        $($buttons[n%imgNum]).trigger('click');
+        // activeButton($($buttons[n%imgNum]));
+      },3000);
+    }
 })
 </script>
 </html>
